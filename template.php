@@ -50,12 +50,12 @@
                     </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="index.html">
-                            <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Monitoring Report</span>
+                            <i class="align-middle" data-feather="monitor"></i> <span class="align-middle">Monitoring Report</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="index.html">
-                            <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">New Report</span>
+                            <i class="align-middle" data-feather="file-plus"></i> <span class="align-middle">New Report</span>
                         </a>
                     </li>
 
@@ -64,7 +64,7 @@
                     </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="user-menu.php">
-                            <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">User Menu</span>
+                            <i class="align-middle" data-feather="users"></i> <span class="align-middle">User Menu</span>
                         </a>
                     </li>
                 </ul>
