@@ -3,7 +3,7 @@ $auth = $_SESSION['auth'];
 
 if (!isset($auth)) {
     $_SESSION['error'] = "Please login first";
-    return header('Location: ../');
+    return header('location: ./');
 }
 
 $auth = (object) $_SESSION['auth'];

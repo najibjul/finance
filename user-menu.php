@@ -88,6 +88,7 @@ if (isset($_POST['name_update'])) {
     }
 
     if (isset($_SESSION['error-name-update']) || isset($_SESSION['error-email-update']) || isset($_SESSION['error-role-update'])) {
+        $_SESSION['error-id-update'] = $id_update;
         mysqli_close($db);
         $_SESSION['old'] = $_POST;
         return header('location:user-menu.php');
@@ -135,13 +136,13 @@ $old = isset($_SESSION['old']) ? $_SESSION['old'] : [];
                 ?>
             </div>
             <div class="d-flex align-items-end">
-                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#add">
                     <i class="align-middle" data-feather="plus"></i> New User
                 </button>
             </div>
         </div>
 
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -152,21 +153,21 @@ $old = isset($_SESSION['old']) ? $_SESSION['old'] : [];
 
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-12 col-md-6 mb-4">
+                                <div class="col-12 col-md-6 mb-3">
                                     <label for="name" class="mb-2">Name</label>
                                     <input type="text" name="name_store" id="name" class="form-control form-control-lg <?= isset($_SESSION['error-name-store']) ? 'is-invalid' : '' ?>" placeholder="Type name here ..." value="<?= isset($old['name_store']) ? $old['name_store'] : ''  ?>">
                                     <?php if (isset($_SESSION['error-name-store'])) : ?>
                                         <span class="text-danger"><?= $_SESSION['error-name-store'] ?></span>
                                     <?php endif; ?>
                                 </div>
-                                <div class="col-12 col-md-6 mb-4">
+                                <div class="col-12 col-md-6 mb-3">
                                     <label for="email" class="mb-2">Email</label>
                                     <input type="email" name="email_store" id="email" class="form-control form-control-lg <?= isset($_SESSION['error-email-store']) ? 'is-invalid' : '' ?>" placeholder="Type email here ..." value="<?= isset($old['email_store']) ? $old['email_store'] : '' ?>">
                                     <?php if (isset($_SESSION['error-email-store'])) : ?>
                                         <span class="text-danger"><?= $_SESSION['error-email-store'] ?></span>
                                     <?php endif; ?>
                                 </div>
-                                <div class="col-12 col-md-6 mb-4">
+                                <div class="col-12 col-md-6 mb-3">
                                     <label for="role" class="mb-2">Role</label>
                                     <select name="role_store" id="role" class="form-select form-select-lg <?= isset($_SESSION['error-role-store']) ? 'is-invalid' : '' ?>">
                                         <option value="">-Choose role-</option>
@@ -178,7 +179,7 @@ $old = isset($_SESSION['old']) ? $_SESSION['old'] : [];
                                         <span class="text-danger"><?= $_SESSION['error-role-store'] ?></span>
                                     <?php endif; ?>
                                 </div>
-                                <div class="col-12 col-md-6 mb-4">
+                                <div class="col-12 col-md-6 mb-3">
                                     <label for="password" class="mb-2">Password</label>
                                     <input type="password" name="password_store" id="password" class="form-control form-control-lg <?= isset($_SESSION['error-password-store']) ? 'is-invalid' : '' ?>" placeholder="Type password here ...">
                                     <?php if (isset($_SESSION['error-password-store'])) : ?>
@@ -199,23 +200,23 @@ $old = isset($_SESSION['old']) ? $_SESSION['old'] : [];
             <table class="table table-bordered table-hover" id="usersTable" class="display">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Action</th>
+                        <th class="text-center">No</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Email</th>
+                        <th class="text-center">Role</th>
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while ($row = mysqli_fetch_object($data)) : ?>
                         <tr>
-                            <td><?= $i++; ?></td>
-                            <td><?= $row->user_name; ?></td>
-                            <td><?= $row->email; ?></td>
-                            <td><?= $row->role_name; ?></td>
+                            <td class="text-center"><?= $i++; ?></td>
+                            <td class="text-center"><?= $row->user_name; ?></td>
+                            <td class="text-center"><?= $row->email; ?></td>
+                            <td class="text-center"><?= $row->role_name; ?></td>
                             <td class="d-flex justify-content-center gap-2">
-                                <a href="#" data-bs-toggle-2="tooltip" data-bs-placement="top" data-bs-title="Edit" data-bs-toggle="modal" data-bs-target="#edit<?= $row->id ?>"><i class="align-middle" data-feather="edit"></i></a>
-                                <a href="#" data-bs-toggle-2="tooltip" data-bs-placement="top" data-bs-title="Delete" data-bs-toggle="modal" data-bs-target="#delete<?= $row->id ?>"><i class="align-middle" data-feather="trash-2"></i></a>
+                                <a href="#" id="edit" class="text-warning" data-bs-toggle-2="tooltip" data-bs-placement="top" data-bs-title="Edit" data-bs-toggle="modal" data-bs-target="#edit<?= $row->id ?>"><i class="align-middle" data-feather="edit"></i></a>
+                                <a href="#" id="destroy" class="text-danger" data-bs-toggle-2="tooltip" data-bs-placement="top" data-bs-title="Delete" data-bs-toggle="modal" data-bs-target="#delete<?= $row->id ?>"><i class="align-middle" data-feather="trash-2"></i></a>
                             </td>
                         </tr>
 
@@ -232,34 +233,34 @@ $old = isset($_SESSION['old']) ? $_SESSION['old'] : [];
                                             <div class="row">
                                                 <div class="col-12 col-md-6 mb-4">
                                                     <label for="name" class="mb-2">Name</label>
-                                                    <input type="text" name="name_update" id="name" class="form-control form-control-lg <?= isset($_SESSION['error-name-update']) ? 'is-invalid' : '' ?>" placeholder="Type name here ..." value="<?= $row->user_name ?>">
-                                                    <?php if (isset($_SESSION['error-name-update'])) : ?>
+                                                    <input type="text" name="name_update" id="name" class="form-control form-control-lg <?= isset($_SESSION['error-name-update']) && $_SESSION['error-id-update'] == $row->id ? 'is-invalid' : '' ?>" placeholder="Type name here ..." value="<?= $row->user_name ?>">
+                                                    <?php if (isset($_SESSION['error-name-update']) && $_SESSION['error-id-update'] == $row->id ) : ?>
                                                         <span class="text-danger"><?= $_SESSION['error-name-update'] ?></span>
                                                     <?php endif; ?>
                                                 </div>
                                                 <div class="col-12 col-md-6 mb-4">
                                                     <label for="email" class="mb-2">Email</label>
-                                                    <input type="email" name="email_update" id="email" class="form-control form-control-lg <?= isset($_SESSION['error-email-update']) ? 'is-invalid' : '' ?>" placeholder="Type email here ..." value="<?= $row->email ?>">
-                                                    <?php if (isset($_SESSION['error-email-update'])) : ?>
+                                                    <input type="email" name="email_update" id="email" class="form-control form-control-lg <?= isset($_SESSION['error-email-update']) && $_SESSION['error-id-update'] == $row->id ? 'is-invalid' : '' ?>" placeholder="Type email here ..." value="<?= $row->email ?>">
+                                                    <?php if (isset($_SESSION['error-email-update']) && $_SESSION['error-id-update'] == $row->id) : ?>
                                                         <span class="text-danger"><?= $_SESSION['error-email-update'] ?></span>
                                                     <?php endif; ?>
                                                 </div>
                                                 <div class="col-12 col-md-6 mb-4">
                                                     <label for="role" class="mb-2">Role</label>
-                                                    <select name="role_update" id="role" class="form-select form-select-lg <?= isset($_SESSION['error-role-update']) ? 'is-invalid' : '' ?>">
+                                                    <select name="role_update" id="role" class="form-select form-select-lg <?= isset($_SESSION['error-role-update']) && $_SESSION['error-id-update'] == $row->id ? 'is-invalid' : '' ?>">
                                                         <?php mysqli_data_seek($data_roles, 0); ?>
                                                         <?php while ($role = mysqli_fetch_object($data_roles)) : ?>
                                                             <option <?= $row->role_id == $role->id ? 'selected' : '' ?> value="<?= $role->id; ?>"><?= $role->name; ?></option>
                                                         <?php endwhile; ?>
                                                     </select>
-                                                    <?php if (isset($_SESSION['error-role-update'])) : ?>
+                                                    <?php if (isset($_SESSION['error-role-update']) && $_SESSION['error-id-update'] == $row->id) : ?>
                                                         <span class="text-danger"><?= $_SESSION['error-role-update'] ?></span>
                                                     <?php endif; ?>
                                                 </div>
                                                 <div class="col-12 col-md-6 mb-4">
                                                     <label for="password" class="mb-2">Password</label>
-                                                    <input type="password" name="password_update" id="password" class="form-control form-control-lg <?= isset($_SESSION['error-password-update']) ? 'is-invalid' : '' ?>" placeholder="Type password here ...">
-                                                    <?php if (isset($_SESSION['error-password-update'])) : ?>
+                                                    <input type="password" name="password_update" id="password" class="form-control form-control-lg <?= isset($_SESSION['error-password-update']) && $_SESSION['error-id-update'] == $row->id ? 'is-invalid' : '' ?>" placeholder="Type password here ...">
+                                                    <?php if (isset($_SESSION['error-password-update']) && $_SESSION['error-id-update'] == $row->id) : ?>
                                                         <span class="text-danger"><?= $_SESSION['error-password-update'] ?></span>
                                                     <?php endif; ?>
                                                 </div>
@@ -310,6 +311,16 @@ ob_start();
 ?>
 <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.2/datatables.min.css" rel="stylesheet" integrity="sha384-oy6ZmHnH9nTuDaccEOUPX5BSJbGKwDpz3u3XiFJBdNXDpAAZh28v/4zfMCU7o63p" crossorigin="anonymous">
 
+<style>
+    #edit:hover {
+        color: #ff8707 !important;
+    }
+
+    #destroy:hover {
+        color: #dc3535 !important;
+    }
+</style>
+
 <?php
 $css = ob_get_clean();
 
@@ -323,6 +334,16 @@ ob_start();
 
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle-2="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+        <?php if (isset($_SESSION['error-name-store']) || isset($_SESSION['error-email-store']) || isset($_SESSION['error-password-store']) || isset($_SESSION['error-role-store'])) : ?>
+            const modal_add = new bootstrap.Modal('#add');
+            modal_add.show()
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error-id-update'])) : ?>
+            const modal_edit = new bootstrap.Modal('#edit<?=$_SESSION["error-id-update"]?>');
+            modal_edit.show()
+        <?php endif; ?>
     });
 </script>
 <?php
@@ -332,5 +353,5 @@ mysqli_close($db);
 unset($_SESSION['success']);
 unset($_SESSION['old']);
 unset($_SESSION['error-name-store'], $_SESSION['error-email-store'], $_SESSION['error-password-store'], $_SESSION['error-role-store']);
-unset($_SESSION['error-name-update'], $_SESSION['error-email-update'], $_SESSION['error-password-update'], $_SESSION['error-role-update']);
+unset($_SESSION['error-id-update'], $_SESSION['error-name-update'], $_SESSION['error-email-update'], $_SESSION['error-password-update'], $_SESSION['error-role-update']);
 ?>
