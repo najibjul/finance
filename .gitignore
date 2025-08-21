@@ -1,3 +1,4 @@
 # template https://adminkit.io/
 /adminkit-main/
 /public/report/*
+!/public/report/.gitkeep
