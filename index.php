@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 
 if (isset($_SESSION['error'])) {
@@ -16,10 +16,10 @@ if (isset($_POST['email'])) {
     $query = "SELECT * FROM users where email = '$email'";
     $data = mysqli_query($db, $query);
 
-    if ( $data->num_rows == 0 ) {
+    if ($data->num_rows == 0) {
         $_SESSION['error'] = "Wrong email & password";
         mysqli_close($db);
-        return header('Location: index.php');    
+        return header('Location: index.php');
     }
 
     $result = mysqli_fetch_object($data);
@@ -27,7 +27,7 @@ if (isset($_POST['email'])) {
     if (!password_verify($password, $result->password)) {
         $_SESSION['error'] = "Wrong email & password";
         mysqli_close($db);
-        return header('Location: index.php');   
+        return header('Location: index.php');
     }
 
     $_SESSION['auth'] = [
@@ -64,39 +64,47 @@ if (isset($_POST['email'])) {
 <body>
     <main class="d-flex w-100">
         <div class="container d-flex flex-column">
-            <div class="row vh-100">
-                <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
+            <div class="vh-100">
+                <div class="w-100 d-table h-100">
                     <div class="d-table-cell align-middle">
-
-                        <div class="text-center mt-4">
-                            <h1 class="h2">Welcome</h1>
-                            <p class="lead">
-                                Sign in to your account to continue
-                            </p>
-                        </div>
-
-                        <div class="card">
+                        <div class="card mx-4 shadow">
                             <div class="card-body">
-                                <div class="m-sm-3">
-                                    <form method="POST" action="index.php">
-                                        <div class="mb-3">
-                                            <label class="form-label">Email</label>
-                                            <input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" required />
+                                <div class="d-flex justify-content-around">
+                                    <div class="w-100 d-none d-md-block">
+                                        <div class="d-flex justify-content-center align-items-center mt-2 border-end ps-4 pe-5 border-3 mx-4" style="height:300px;">
+                                            <img src="./public/img/icons/express.jpg" class="img-fluid" alt="Express">
                                         </div>
-                                        <div class="mb-4">
-                                            <label class="form-label">Password</label>
-                                            <input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" required />
+                                    </div>
+                                    <div class="w-100">
+                                        <div class="text-center mt-4">
+                                            <h1 class="h2">Welcome</h1>
+                                            <p class="lead">
+                                                Sign in to your account to continue
+                                            </p>
                                         </div>
-                                        <div class="d-grid gap-2 mt-3 mb-3">
-                                            <button type="submit" class="btn btn-lg btn-primary">Sign in</button>
+                                        <div class="m-sm-3">
+                                            <form method="POST" action="index.php">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Email</label>
+                                                    <input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" required />
+                                                </div>
+                                                <div class="mb-4">
+                                                    <label class="form-label">Password</label>
+                                                    <input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" required />
+                                                </div>
+                                                <div class="d-grid gap-2 mt-3 mb-3">
+                                                    <button type="submit" class="btn btn-lg btn-primary">Sign in</button>
+                                                </div>
+                                                <?php
+                                                if (isset($error)) {
+                                                    include "./component/error.php";
+                                                }
+                                                ?>
+                                            </form>
                                         </div>
-                                        <?php 
-                                        if (isset($error)) {
-                                            include "./component/error.php";
-                                        }
-                                        ?>
-                                    </form>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -110,6 +118,6 @@ if (isset($_POST['email'])) {
 
 </html>
 
-<?php 
+<?php
 unset($_SESSION['error']);
 ?>

@@ -53,6 +53,11 @@
                             <i class="align-middle" data-feather="monitor"></i> <span class="align-middle">Monitoring Report</span>
                         </a>
                     </li>
+                    <li class="sidebar-item <?= $title == 'Search Report' ? 'active' : '' ?>">
+                        <a class="sidebar-link" href="search-report.php">
+                            <i class="align-middle" data-feather="search"></i> <span class="align-middle">Search Report</span>
+                        </a>
+                    </li>
                     <?php if ($auth->role_id == 1) : ?>
                         <li class="sidebar-item <?= $title == 'New Report' ? 'active' : '' ?>">
                             <a class="sidebar-link" href="new-report.php">

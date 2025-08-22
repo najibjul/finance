@@ -4,6 +4,34 @@ session_start();
 include './config/database.php';
 include './middleware/auth.php';
 
+if (!isset($_GET['month']) || !isset($_GET['year'])) {
+    mysqli_close($db);
+    date_default_timezone_set('Asia/Jakarta');
+    $year = date('Y', strtotime('now'));
+    return header('location: dashboard.php?month=All&year=' . $year);
+}
+
+if ($_GET['month'] == "All") {
+    $year = intval($_GET['year']);
+    $month = "All";
+    if (!preg_match('/^(\d{4})$/', $year, $matches)) {
+        mysqli_close($db);
+        date_default_timezone_set('Asia/Jakarta');
+        $year = date('Y', strtotime('now'));
+        return header('location: dashboard.php?month=All&year=' . $year);
+    }
+} else {
+    $year = intval($_GET['year']);
+    $month = $_GET['month'];
+    $my = $month . '-' . $year;
+    if (!preg_match('/^(0[1-9]|1[0-2])-(\d{4})$/', $my, $matches)) {
+        mysqli_close($db);
+        date_default_timezone_set('Asia/Jakarta');
+        $year = date('Y', strtotime('now'));
+        return header('location: dashboard.php?year=' . $year);
+    }
+}
+
 ob_start();
 
 $query = "SELECT id FROM reports WHERE DATE(upload_date) = CURDATE()";
@@ -18,21 +46,57 @@ $query = "SELECT id FROM reports WHERE approved_at IS NULL";
 $data = mysqli_query($db, $query);
 $waiting = $data->num_rows;
 
-$query = "SELECT extension, COUNT(*) total FROM reports GROUP BY extension";
+$query = "SELECT extension, COUNT(*) total FROM reports WHERE YEAR(upload_date) = '$year'";
+if ($month != "All") {
+    $query .= " AND MONTH(upload_date) = '$month'";
+}
+$query .= " GROUP BY extension";
 $data_pie = mysqli_query($db, $query);
 
-$query = "SELECT name, total FROM months a LEFT JOIN ( SELECT CONVERT(DATE_FORMAT(upload_date, '%m'), UNSIGNED) AS period_id, COUNT(*) AS total FROM reports GROUP BY period_id ORDER BY period_id ) b ON a.id = b.period_id";
+if ($month == 'All') {
+    $query = "SELECT name, total FROM months a LEFT JOIN ( SELECT CONVERT(DATE_FORMAT(upload_date, '%m'), UNSIGNED) AS period_id, COUNT(*) AS total FROM reports WHERE YEAR(upload_date) = '$year' GROUP BY period_id ORDER BY period_id ) b ON a.id = b.period_id";
+} else {
+    $query = "SELECT * FROM ( SELECT DAY AS name, case when total IS NULL AND (DAY <= DAY(CURDATE()) OR '$month' < MONTH(CURDATE())) then 0 ELSE total END AS total from ( SELECT day , total FROM ( SELECT CONVERT(DATE_FORMAT(upload_date, '%d'), UNSIGNED) AS day_id, COUNT(*) total FROM reports WHERE YEAR(upload_date) = '$year' AND MONTH(upload_date) = '$month' GROUP BY day_id ) a RIGHT JOIN dates b ON a.day_id = b.day ORDER BY day ASC ) c ) d WHERE NAME <= DATE(CURDATE())";
+
+}
 $data_line = mysqli_query($db, $query);
 
-$query = "SELECT invoice, upload_date, document_name FROM reports ORDER BY upload_date DESC, created_at DESC LIMIT 10";
+$query = "SELECT invoice, upload_date, document_name FROM reports WHERE YEAR(upload_date) = '$year' ";
+if ($month != 'All') {
+    $query .= "AND MONTH(upload_date) = '$month'";
+}
+$query .= "ORDER BY upload_date DESC, created_at DESC LIMIT 10";
 $data_last = mysqli_query($db, $query);
 $i = 1;
 
 $title = 'Dashboard';
+
+$query = "SELECT * FROM months";
+$data_months = mysqli_query($db, $query);
+
+$query = "SELECT * FROM years";
+$data_years = mysqli_query($db, $query);
 ?>
 
-<h3 class="fw-bold mb-4">Dashboard</h3>
-
+<h3 class="fw-bold">Dashboard</h3>
+<div class="d-flex justify-content-end">
+    <form action="dashboard.php" method="GET">
+        <div class="d-flex gap-2 my-4">
+            <select name="month" class="form-select form-select-lg w-auto">
+                <option value="All">All</option>
+                <?php foreach ($data_months as $row) : ?>
+                    <option <?= $row['id'] == $_GET['month'] ? 'selected' : '' ?> value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
+                <?php endforeach; ?>
+            </select>
+            <select name="year" class="form-select form-select-lg w-auto">
+                <?php foreach ($data_years as $row) : ?>
+                    <option <?= $row['id'] == $_GET['year'] ? 'selected' : '' ?> value="<?= $row['name'] ?>"><?= $row['name'] ?></option>
+                <?php endforeach; ?>
+            </select>
+            <button class="btn btn-lg btn-primary">Filter</button>
+        </div>
+    </form>
+</div>
 <div class="row">
     <div class="col-12 col-md-6">
         <div class="row row-cols-1 row-cols-md-2">
@@ -157,10 +221,10 @@ $title = 'Dashboard';
                     <table class="table mb-0">
                         <tbody>
                             <?php foreach ($data_pie as $row) : ?>
-                            <tr>
-                                <td><?=$row['extension']?></td>
-                                <td class="text-end"><?=$row['total']?></td>
-                            </tr>
+                                <tr>
+                                    <td><?= $row['extension'] ?></td>
+                                    <td class="text-end"><?= $row['total'] ?></td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
