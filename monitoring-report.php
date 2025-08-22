@@ -7,7 +7,7 @@ ob_start();
 
 $title = 'Monitoring Report';
 
-$query = "SELECT id, invoice, upload_date, document_name, approved_at FROM reports";
+$query = "SELECT id, invoice, upload_date, document_name, approved_at FROM reports ORDER BY upload_date DESC, created_at DESC";
 $data_reports = mysqli_query($db, $query);
 $i = 1;
 
@@ -69,7 +69,7 @@ if (isset($_POST['id_destroy'])) {
                                 
                                 <a href="download.php?report=<?= $row->document_name ?>" id="download" class="text-success" data-bs-toggle-2="tooltip" data-bs-placement="top" data-bs-title="Download"><i class="align-middle" data-feather="download"></i></a>
                                 
-                                <?php if (empty($row->approved_at)) : ?>
+                                <?php if (empty($row->approved_at) && $auth->role_id == 1) : ?>
                                     <a href="#" id="destroy" class="text-danger" data-bs-toggle-2="tooltip" data-bs-placement="top" data-bs-title="Delete" data-bs-toggle="modal" data-bs-target="#delete<?= $row->id ?>"><i class="align-middle" data-feather="trash-2"></i></a>
                                 <?php endif; ?>
                             </td>

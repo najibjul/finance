@@ -24,7 +24,7 @@ $data_pie = mysqli_query($db, $query);
 $query = "SELECT name, total FROM months a LEFT JOIN ( SELECT CONVERT(DATE_FORMAT(upload_date, '%m'), UNSIGNED) AS period_id, COUNT(*) AS total FROM reports GROUP BY period_id ORDER BY period_id ) b ON a.id = b.period_id";
 $data_line = mysqli_query($db, $query);
 
-$query = "SELECT invoice, upload_date, document_name FROM reports ORDER BY upload_date DESC LIMIT 10";
+$query = "SELECT invoice, upload_date, document_name FROM reports ORDER BY upload_date DESC, created_at DESC LIMIT 10";
 $data_last = mysqli_query($db, $query);
 $i = 1;
 
@@ -110,7 +110,7 @@ $title = 'Dashboard';
     <div class="col-12 col-md-8">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title mb-0">Reports Timeline</h5>
+                <h5 class="card-title mb-0">Latest Report</h5>
             </div>
             <div class="card-body">
                 <div class="d-flex justify-content-end mb-2 mx-3">

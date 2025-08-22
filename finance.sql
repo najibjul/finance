@@ -19,26 +19,24 @@ CREATE TABLE IF NOT EXISTS `document_types` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `extension` json NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table finance.document_types: ~3 rows (approximately)
-INSERT INTO `document_types` (`id`, `name`, `extension`, `created_at`, `updated_at`) VALUES
-	(1, 'PDF', '{"pdf": true}', '2025-08-20 08:56:05', '2025-08-20 08:56:06'),
-	(2, 'Excel', '{"csv": true, "xlsx": true}', '2025-08-20 08:58:15', '2025-08-20 08:58:16'),
-	(3, 'Word', '{"docx": true}', '2025-08-20 09:00:18', '2025-08-20 09:00:20');
+INSERT INTO `document_types` (`id`, `name`, `extension`) VALUES
+	(1, 'PDF', '{"pdf": true}'),
+	(2, 'Excel', '{"csv": true, "xlsx": true}'),
+	(3, 'Word', '{"docx": true}');
 
 -- Dumping structure for table finance.months
 CREATE TABLE IF NOT EXISTS `months` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table finance.months: ~12 rows (approximately)
+-- Dumping data for table finance.months: ~0 rows (approximately)
 INSERT INTO `months` (`id`, `name`) VALUES
 	(1, 'Jan'),
 	(2, 'Feb'),
@@ -79,9 +77,9 @@ CREATE TABLE IF NOT EXISTS `reports` (
   CONSTRAINT `FK_reports_roles` FOREIGN KEY (`reporter_role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_reports_users` FOREIGN KEY (`reported_by`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_reports_users_2` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1010 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1010 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table finance.reports: ~0 rows (approximately)
+-- Dumping data for table finance.reports: ~1,001 rows (approximately)
 INSERT INTO `reports` (`id`, `reported_by`, `reporter_role_id`, `invoice`, `upload_date`, `document_date`, `document_name`, `document_type_id`, `extension`, `note`, `approved_by`, `approved_at`, `created_at`, `updated_at`) VALUES
 	(9, 1, 1, 'asasd', '2025-08-20', '2025-08-20', 'adsasd_250820142522.xlsx', 2, 'xlsx', '', 2, '2025-08-20 15:13:24', '2025-08-20 14:25:22', '2025-08-20 14:25:22'),
 	(10, 1, 1, 'CRVLT', '2025-02-21', '2025-02-10', 'NMFNP', 3, 'docx', 'RFYBR', NULL, NULL, '2025-08-20 16:06:03', '2025-08-20 16:06:03'),
@@ -1089,23 +1087,21 @@ INSERT INTO `reports` (`id`, `reported_by`, `reporter_role_id`, `invoice`, `uplo
 CREATE TABLE IF NOT EXISTS `roles` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table finance.roles: ~2 rows (approximately)
-INSERT INTO `roles` (`id`, `name`, `created_at`, `updated_at`) VALUES
-	(1, 'Admin Keuangan', '2025-08-19 09:39:30', '2025-08-19 09:39:31'),
-	(2, 'General Manager', '2025-08-19 09:39:50', '2025-08-19 09:39:50'),
-	(3, 'Finance', '2025-08-19 09:40:00', '2025-08-19 09:40:01');
+INSERT INTO `roles` (`id`, `name`) VALUES
+	(1, 'Admin Keuangan'),
+	(2, 'General Manager'),
+	(3, 'Finance');
 
 -- Dumping structure for table finance.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `password` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `role_id` int NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -1113,12 +1109,13 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `email` (`email`),
   KEY `role_id` (`role_id`),
   CONSTRAINT `FK_users_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table finance.users: ~3 rows (approximately)
+-- Dumping data for table finance.users: ~2 rows (approximately)
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role_id`, `created_at`, `updated_at`) VALUES
-	(1, 'admin', 'admin@example.com', '$2y$10$9jsGaFrkY7oSUfz.lSwFy.lF.42kZ8uo1BFAJsWyhFgU7ivhuFeR6', 1, '2025-08-19 09:48:32', '2025-08-19 09:48:33'),
-	(2, 'najib', 'najib@gmail.com', '$2y$10$P5kN3.GsqbDlCNjXsTmYH.nx73rJkhmK6JUvhIRqLyb0hCThzMkA2', 2, '2025-08-19 14:35:15', '2025-08-19 16:47:59');
+	(1, 'Administrator', 'admin@example.com', '$2y$10$9jsGaFrkY7oSUfz.lSwFy.lF.42kZ8uo1BFAJsWyhFgU7ivhuFeR6', 1, '2025-08-19 09:48:32', '2025-08-19 09:48:33'),
+	(2, 'GM', 'gm@examplel.com', '$2y$10$9jsGaFrkY7oSUfz.lSwFy.lF.42kZ8uo1BFAJsWyhFgU7ivhuFeR6', 2, '2025-08-19 14:35:15', '2025-08-19 16:47:59'),
+	(4, 'Finance', 'finance@example.com', '$2y$10$9jsGaFrkY7oSUfz.lSwFy.lF.42kZ8uo1BFAJsWyhFgU7ivhuFeR6', 3, '2025-08-21 11:59:41', '2025-08-21 11:59:42');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

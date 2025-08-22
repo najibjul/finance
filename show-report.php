@@ -71,7 +71,7 @@ $result = mysqli_fetch_object($data_reports);
         ?>
         <div class="m-3 d-flex justify-content-end gap-2">
             <a href="download.php?report=<?= $result->document_name ?>" class="btn btn-lg btn-success"><i data-feather="download"></i> Download</a>
-            <?php if (empty($result->approved_at)) : ?>
+            <?php if (empty($result->approved_at) && $auth->role_id == 1) : ?>
                 <button class="btn btn-lg btn-danger" data-bs-toggle="modal" data-bs-target="#delete"><i data-feather="trash"></i> Delete</button>
             <?php endif; ?>
         </div>
