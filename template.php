@@ -30,8 +30,10 @@
     <div class="wrapper">
         <nav id="sidebar" class="sidebar js-sidebar">
             <div class="sidebar-content js-simplebar">
-                <a class="sidebar-brand" href="index.html">
-                    <span class="align-middle">AdminKit</span>
+                <a class="sidebar-brand" href="dashboard.php">
+                    <div class="p-2 bg-white rounded">
+                        <img src="./public/img/icons/express.jpg" class="img-fluid" alt="Express">
+                    </div>
                 </a>
 
                 <ul class="sidebar-nav">
@@ -118,7 +120,7 @@
                     <div class="row text-muted">
                         <div class="col-6 text-start">
                             <p class="mb-0 text-muted">
-                                <b>AdminKit</b>
+                                <b>Express</b>
                             </p>
                         </div>
                     </div>

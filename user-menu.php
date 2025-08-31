@@ -97,7 +97,7 @@ if (isset($_POST['name_update'])) {
     if (!empty($password_update)) {
         $hashedPassword = password_hash($password_update, PASSWORD_BCRYPT);
 
-        $query = "UPDATE users SET name = '$name_update', email = '$email_update', role_id = '$role_update', password = '$password_update', updated_at = NOW() WHERE id = '$id_update'";
+        $query = "UPDATE users SET name = '$name_update', email = '$email_update', role_id = '$role_update', password = '$hashedPassword', updated_at = NOW() WHERE id = '$id_update'";
     } else {
         $query = "UPDATE users SET name = '$name_update', email = '$email_update', role_id = '$role_update', updated_at = NOW() WHERE id = '$id_update'";
     }
